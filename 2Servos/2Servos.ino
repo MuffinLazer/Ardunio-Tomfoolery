@@ -4,7 +4,7 @@
 Servo Servo1;
 Servo Servo2;
 
-int servoPinA = 9;
+int servoPinA = 6;
 int servoPinB = 10;
 int potPin = A0;
 
