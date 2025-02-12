@@ -8,7 +8,7 @@ void setup() {
 
 void loop() {
   int reading = analogRead(potPin); 
-  int motorSpeed = map(reading, 0, 1023, 0, 255); 
+  int motorSpeed = map(reading, 0, 1024, 0, 1020); 
 
   analogWrite(motorPin, motorSpeed);
 
