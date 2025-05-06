@@ -1,28 +1,49 @@
-#include <Stepper.h>
+#include <Servo.h>
+#define motor1Pin 6
+#define motor2Pin 9
 
-// # steps for full 360-degree rotation, change to fit your motor
-int stepsPerRevolution = 2048;
+Servo myservo1;
+Servo myservo2;
 
-// set a speed for the stepper motor
-int rpm = 10;
+int azimuthpos = 90;
+int verticalpos = 90;
 
-// initialize stepper library on pins 8 - 11
-// pin order IN1, IN3, IN2, IN4
-Stepper myStepper1 (stepsPerRevolution, 8, 11, 9, 12);
-Stepper myStepper2 (stepsPerRevolution, 3, 5, 4, 6);
 void setup() {
-  myStepper1.setSpeed(rpm);
-  myStepper2.setSpeed(rpm);
+
+pinMode(motor1Pin, OUTPUT);
+pinMode(motor2Pin, OUTPUT);
+myservo1.attach(6);
+myservo2.attach(9);
+  
+  Serial.begin(9600);
 }
 
 void loop() {
-  // make a full revolution in one direction
-  myStepper1.step(stepsPerRevolution);
-  myStepper2.step(-stepsPerRevolution);
-  delay(500);
+  Serial.print("Azimuth servo angle: ");
+  Serial.print(azimuthpos);
 
-  // make a full revolution in the opposite direction
-  myStepper1.step(-stepsPerRevolution);
-  myStepper2.step(stepsPerRevolution);
-  delay(500);
+  Serial.print('\n');
+
+  Serial.print("Vertical servo angle: ");
+  Serial.println(verticalpos);
+   delay(50);
+
+
+myservo1.write(azimuthpos);
+myservo2.write(verticalpos);
+
+
+  if (Serial.available()) {
+    char command = Serial.read();
+
+    if (command == 'O') {
+      azimuthpos = max(0, azimuthpos - 10); 
+      myservo1.write(azimuthpos); 
+    }
+    if (command == 'i') {
+      azimuthpos = max(0, azimuthpos + 10); 
+      myservo1.write(azimuthpos); 
+    }
+
+  }
 }

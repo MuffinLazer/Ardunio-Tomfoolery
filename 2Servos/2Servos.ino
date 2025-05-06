@@ -1,5 +1,4 @@
 #include <Servo.h>
-#include <stdio.h>
 
 Servo Servo1;
 Servo Servo2;
