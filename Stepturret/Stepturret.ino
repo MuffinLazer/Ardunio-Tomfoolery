@@ -1,49 +1,38 @@
 #include <Servo.h>
-#define motor1Pin 6
-#define motor2Pin 9
 
-Servo myservo1;
-Servo myservo2;
-
-int azimuthpos = 90;
-int verticalpos = 90;
+Servo myServo1;
+Servo myServo2;
 
 void setup() {
-
-pinMode(motor1Pin, OUTPUT);
-pinMode(motor2Pin, OUTPUT);
-myservo1.attach(6);
-myservo2.attach(9);
-  
   Serial.begin(9600);
+  myServo1.attach(9);
+  myServo1.write(90);    
+
+  myServo2.attach(6);
+  myServo2.write(90);      
 }
 
 void loop() {
-  Serial.print("Azimuth servo angle: ");
-  Serial.print(azimuthpos);
 
-  Serial.print('\n');
+  if (Serial.available() > 0) {
+    int angle1 = Serial.parseInt();       
+    int angle2 = Serial.parseInt();
+  
+    if (angle1 >= 0 && angle1 <= 180 && angle2 >= 0 && angle2 <= 180) {
 
-  Serial.print("Vertical servo angle: ");
-  Serial.println(verticalpos);
-   delay(50);
+      myServo1.write(angle1);               // move servo to that angle
+      myServo2.write(angle2);
+      Serial.print("Servo1 set to "); 
+      Serial.println(angle1);
+      Serial.print("Servo2 set to ");
+      Serial.println(angle2);
 
+    } 
 
-myservo1.write(azimuthpos);
-myservo2.write(verticalpos);
-
-
-  if (Serial.available()) {
-    char command = Serial.read();
-
-    if (command == 'O') {
-      azimuthpos = max(0, azimuthpos - 10); 
-      myservo1.write(azimuthpos); 
-    }
-    if (command == 'i') {
-      azimuthpos = max(0, azimuthpos + 10); 
-      myservo1.write(azimuthpos); 
+    else {
+      Serial.println("Angle out of range");
     }
 
+    while (Serial.available() > 0) Serial.read();
   }
 }
